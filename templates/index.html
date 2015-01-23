@@ -62,22 +62,29 @@
       </div>
 
       <div class = "container">
-
-        <form action="/output" method="GET">
+        <!-- <form class="form-inline" action="/output" method="GET"> -->
+        <form class="form-inline" action="/output" method="GET">
           <div class="form-group">
-            <label for="ID">Add what you want, subtract what you don't:</label>
-            <input type="text" class="form-control" id="ID" name='ID'placeholder="e.g., Adele + Jazz - Vocals">
+            <label for="ID">Add: </label>
+            <input type="text" class="form-control" id="inputAdd" name="inputAdd" placeholder="e.g., Adele">
           </div>
 
-          <div>
-            <button type="submit" class="btn btn-lg btn-primary" id="get_music">Go!</button>
+          <div class="form-group">
+            <label for="ID">Subtract: </label>
+            <input type="text" class="form-control" id="inputSubtract" name="inputSubtract" placeholder="e.g., Blues">
           </div>
 
+          <div class="form-group">
+            <button type="submit" class="btn btn-lg btn-primary"> Go! </button>
+          </div>
+
+          <!-- <button type="submit" class="btn btn-lg btn-success"> + </button> -->
         </form>
       </div>
 
-      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-      <script src="static/js/bootsrap.min.js"></script>
+      <p></p>
+
+
 
     </div><!-- /.container-->
     
@@ -89,6 +96,7 @@
     <script src="static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
   </body>
 </html>
 

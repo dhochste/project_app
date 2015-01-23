@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="description" content="Find new music using the machine learning.">
     <meta name="author" content="David L. Hochstetler">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Output Page</title>
+    <title>Welcome to Jalgebra!</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -40,10 +40,12 @@
           </button>
           <a class="navbar-brand" href="#">Jalgebra</a>
         </div>
+
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="/about">About</a></li>
+            <li><a href="./about.html">About</a></li>
+            <!-- <li><a href="#about">About</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -60,47 +62,46 @@
       </div>
 
       <div class = "container">
-        <!-- <form class="form-inline" action="/output" method="GET"> -->
         <form class="form-inline" action="/output" method="GET">
           <div class="form-group">
-            <label for="ID">Add: </label>
-            <input type="text" class="form-control" id="inputAdd" name="inputAdd" placeholder="e.g., Adele">
+            <input type="text" class="form-control" id="inputAdd" placeholder="e.g., Adele">
+            <label for="ID">Add?</label>
           </div>
-
-          <div class="form-group">
-            <label for="ID">Subtract: </label>
-            <input type="text" class="form-control" id="inputSubtract" name="inputSubtract" placeholder="e.g., Blues">
-          </div>
-
-          <div class="form-group">
-            <button type="submit" class="btn btn-lg btn-primary"> Go! </button>
-          </div>
-
-          <!-- <button type="submit" class="btn btn-lg btn-success"> + </button> -->
+          <button type="submit" class="btn btn-lg btn-success"> + </button>
         </form>
       </div>
+      <div class = "container">
+        <form class="form-inline" action="/output" method="GET">
+          <div class="form-group">
+            <input type="text" class="form-control" id="inputSubtract" placeholder="e.g., Adele">
+            <label for="ID">Subtract?</label>
+          </div>
+          <button type="submit" class="btn btn-lg btn-danger"> - </button>
+        </form>
+      </div>
+
+ 
+      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="static/js/bootsrap.min.js"></script> 
 
     </div><!-- /.container-->
 
     <div class="container">
-      <div class="starter-template">
-        <p class="lead">Adding: {{add_list}} </p>
-        <p class="lead">Subtracting: {{subtract_list}} </p>
-        <h3>Results </h3>
+
+      <div class = "container">
+        <!-- OUTPUT FORM HERE -->
+
+        <!-- Button to Run calculation -->
+        <div>
+          <button type="submit" class="btn btn-lg btn-primary"> Go! </button>
+        </div>
+
       </div>
 
-    <table class="table table-hover">
-      <tr><th>Result</th><th>Score</th></tr>
-      {% for result in results_list %}
-      <tr><td>{{ result[0]}}</td><td>{{ result[1]}}</td></tr>
-      {% endfor %}
-    </table>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
 
-    </div><!-- /.container -->
-
+    </div><!-- /.container-->
+    
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -109,6 +110,15 @@
     <script src="static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- BULID JQUERY FUNCTION HERE--><!--
+    $( document ).ready(function() {
+        $(#inputAdd).click(function( event ) {
+            alert( "You clicked add!" );
+            event.preventDefault();
+        });
+    }); -->
+
   </body>
 </html>
 
