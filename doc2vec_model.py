@@ -1,20 +1,25 @@
-
+import re
 
 def model_music(input_string,model):
-	# Load the model
-	# model_directory = '../doc2vec_models/'
-	# model_filename = 'model_01.doc2vec'
-	# model = Doc2Vec.load(model_directory+model_filename)
+	"""
+	Runs the gensim Doc2Vec model with the input string after parsing for
+	positive and negative terms
+	"""
+	# Convert from unicode to strings
+	add_str = str(input_string[0])
+	sub_str = str(input_string[1])
 
-	# Look at results
+	# parse strings for actual terms
+	add_terms = re.findall(r'(\w+)[,\s]*', add_str)
+	sub_terms = re.findall(r'(\w+)[,\s]*', sub_str)
 
-	# Not sure what this does...
-#	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	# make everything lower-case:
+	add_terms = [x.lower() for x in add_terms]
+	sub_terms = [x.lower() for x in sub_terms]
 
-
-	positive_terms = ['hard','rock']
-	negative_terms = []
-	results = model.most_similar_cosmul(positive= positive_terms, 
-		negative=negative_terms, topn=10)
+	# add_terms = ['hard','rock']
+	# sub_terms = []
+	results = model.most_similar_cosmul(positive= add_terms, 
+		negative=sub_terms, topn=10)
 
 	return results
