@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Jalgebra</a>
+          <a class="navbar-brand" href="#">kickOut.jams</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -55,8 +55,8 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Welcome to Jalgebra!</h1>
-        <p>Everything you want, nothing you don't.</p>
+        <h1>kickOut.jams!</h1>
+        <p>Find your new groove.</p>
       </div>
 
       <div class = "container">
@@ -86,18 +86,18 @@
       <div class="starter-template">
         <p class="lead">Adding: {{add_list}} </p>
         <p class="lead">Subtracting: {{subtract_list}} </p>
-        <h3>Results </h3>
       </div>
 
-      <table class="table table-hover">
-        <!--<tr><th>Result</th><th>Score</th></tr>-->
+      <div class="row">
         {% for result in results_list %}
-        <tr><td>{{ result[0]}}</td><td> <img src= {{ result[1] }} class="img-rounded" 
-          height="100" width="100"></td></tr>
+        
+        <div class="col-md-6"> 
+          <h1><a href={{result[2]}} target="blank" style="color:black"><strong>{{ result[0]}}</strong></a></h1> <img src= {{ result[1] }} class="img-rounded" 
+          height="300" width="300">
+          </div>
+
         {% endfor %}
-      </table>
-
-
+      </div>
 
     <!--<table class="table table-hover">
       <tr><th>Result</th><th>Score</th></tr>

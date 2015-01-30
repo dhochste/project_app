@@ -66,8 +66,8 @@ def parse_list(input_string,lower=False):
 	# Get rid of leading and spaces if they exis
 
 	# parse strings for actual terms
-	add_terms = re.findall(r'([\w+\s*]+)[,\s]*', add_str)
-	sub_terms = re.findall(r'([\w+\s*]+)[,\s]*', sub_str)
+	add_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', add_str)
+	sub_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', sub_str)
 	# get rid of leading space, if exist
 	# add_terms[0] = re.search(r'(\s*)([\w+\s*]+)',add_terms[0]).group(2)
 	# sub_terms[0] = re.search(r'(\s*)([\w+\s*]+)',sub_terms[0]).group(2)
@@ -157,7 +157,7 @@ def most_similar_artists(positive_terms=[], negative_terms=[],
     all_search_terms = positive_terms+negative_terms
     # find the array of distances for all terms
     distances = doc2Vec_model.most_similar(positive=positive_terms, 
-    	negative=negative_terms, topn=5*list_len)
+    	negative=negative_terms, topn=10*list_len)
 
     # print distances[:10]
     # # sort array and convert to indices, rather than raw values (which are returned)
