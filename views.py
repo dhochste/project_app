@@ -2,7 +2,15 @@ from flask import render_template, request
 from project_app import app
 # import pymysql as mdb
 import json
-from doc2vec_model import model_music
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+from doc2vec_model_methods import model_app_results
+from doc2vec_model_methods import populate_artist_genres
+from doc2vec_model_methods import most_similar_artists
+from doc2vec_model_methods import most_similar_artists_w_genre
+from api_query import do_list_query
+
 # from a_Model import ModelIt #This willbe my model
 
 """ NOT USING MYSQL
@@ -30,15 +38,20 @@ def output():
     input_subtract_string = request.args.get('inputSubtract')
 
     #Hard coding
-    results = model_music([input_add_string, input_subtract_string],app.model)
+    # results = model_music([input_add_string, input_subtract_string],app.model)
+    results = model_app_results([input_add_string, input_subtract_string],
+        app.artist_list,app.model,list_len=10,lower=False)
 
+    # results2 = (results[2][0].decode('utf-8'), results[2][1])
+    top_artists = [tup[0] for tup in results] # List of results
 
-    # parse the string
+    #Query for images
+    img_src_list = do_list_query(top_artists)
 
-    # use it in the model
+    results2 = [[artist, img] for artist, img in zip(top_artists, img_src_list)]
 
     return render_template("output.html", add_list = input_add_string,
-        subtract_list = input_subtract_string, results_list = results)
+        subtract_list = input_subtract_string, results_list = results2) #, img_src_list = img_src_list)
 
 @app.route('/about')
 def about():
