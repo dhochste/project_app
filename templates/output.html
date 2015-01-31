@@ -8,7 +8,7 @@
     <meta name="author" content="David L. Hochstetler">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Output Page</title>
+    <title>kickOut Results</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Jalgebra</a>
+          <a class="navbar-brand" href="#">kickOut.jams</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -55,8 +55,8 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Welcome to Jalgebra!</h1>
-        <p>Everything you want, nothing you don't.</p>
+        <h1>kickOut.jams!</h1>
+        <p>Find your new groove.</p>
       </div>
 
       <div class = "container">
@@ -86,15 +86,25 @@
       <div class="starter-template">
         <p class="lead">Adding: {{add_list}} </p>
         <p class="lead">Subtracting: {{subtract_list}} </p>
-        <h3>Results </h3>
       </div>
 
-    <table class="table table-hover">
+      <div class="row">
+        {% for result in results_list %}
+        
+        <div class="col-md-6"> 
+          <h1><a href={{result[2]}} target="blank" style="color:black"><strong>{{ result[0]}}</strong></a></h1> <img src= {{ result[1] }} class="img-rounded" 
+          height="300" width="300">
+          </div>
+
+        {% endfor %}
+      </div>
+
+    <!--<table class="table table-hover">
       <tr><th>Result</th><th>Score</th></tr>
       {% for result in results_list %}
       <tr><td>{{ result[0]}}</td><td>{{ result[1]}}</td></tr>
       {% endfor %}
-    </table>
+    </table>-->
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
