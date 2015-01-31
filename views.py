@@ -40,7 +40,7 @@ def output():
     #Hard coding
     # results = model_music([input_add_string, input_subtract_string],app.model)
     results = model_app_results([input_add_string, input_subtract_string],
-        app.artist_list,app.model,list_len=8,lower=False)
+        app.artist_list,app.genre_lookup,app.model,list_len=8,lower=False)
 
     # results2 = (results[2][0].decode('utf-8'), results[2][1])
     top_artists = [tup[0] for tup in results] # List of results

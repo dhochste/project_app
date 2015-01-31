@@ -86,7 +86,8 @@ def parse_list(input_string,lower=False):
 	return add_terms, sub_terms
 
 
-def model_app_results(input_string,artist_list,model,list_len=10,lower=False):
+def model_app_results(input_string,artist_list,music_genre_lookup,
+	model,list_len=10, lower=False):
 	"""
 	Runs the gensim Doc2Vec model with the input string after parsing for
 	positive and negative terms
@@ -115,11 +116,14 @@ def model_app_results(input_string,artist_list,model,list_len=10,lower=False):
 	results = most_similar_artists(add_terms, sub_terms, artist_list, 
 		list_len, model)
 
+	# results = most_similar_artists_w_genre(add_terms, sub_terms,
+	# 	artist_list, music_genre_lookup, model, list_len)
+
 	return results
 
 
 def most_similar_artists_w_genre(positive_terms=[], negative_terms=[], 
-	artist_list=[], music_genre_lookup={}, doc2Vec_model = None):
+	artist_list=[], music_genre_lookup={}, doc2Vec_model = None, list_len=10):
 	"""
 	Returns a list of tuples: (artist, similarity score) given pos and
 	neg input vocab, list of all artists, and an artist-genre dict.
@@ -133,18 +137,24 @@ def most_similar_artists_w_genre(positive_terms=[], negative_terms=[],
 	print all_search_terms
 	# find the array of distances for all terms
 	distances = doc2Vec_model.most_similar(positive=positive_latent, 
-		negative=negative_latent, topn=None)
-	# sort array and convert to indices, rather than raw values (which are returned)
-	best_distance_indices = np.argsort(distances)[::-1]
-	# build a dict of artists with assosciated distances
-	artists = []
-	for dist_index in best_distance_indices:
-		vocab_word = doc2Vec_model.index2word[dist_index] 
-		# if the word is an artist, and not one we searched for
-		if vocab_word in artist_list and vocab_word not in all_search_terms: 
-			artists.append((vocab_word, float(distances[dist_index]))) # assign the score to the entry
+		negative=negative_latent, topn=500)
 
-	return artists
+	artists = []
+	for tup in distances:
+		if tup[0] in artist_list and tup[0] not in all_search_terms:
+			artists.append(tup)
+	return artists[:list_len]
+	# # sort array and convert to indices, rather than raw values (which are returned)
+	# best_distance_indices = np.argsort(distances)[::-1]
+	# # build a dict of artists with assosciated distances
+	# artists = []
+	# for dist_index in best_distance_indices:
+	# 	vocab_word = doc2Vec_model.index2word[dist_index] 
+	# 	# if the word is an artist, and not one we searched for
+	# 	if vocab_word in artist_list and vocab_word not in all_search_terms: 
+	# 		artists.append((vocab_word, float(distances[dist_index]))) # assign the score to the entry
+
+	# return artists
 
 
 def most_similar_artists(positive_terms=[], negative_terms=[], 
