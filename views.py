@@ -46,24 +46,32 @@ def output():
         [input_add_string, input_subtract_string],app.artist_list,
         app.title_list,app.genre_lookup,app.model,list_len=10,lower=False)
 
-    # # results2 = (results[2][0].decode('utf-8'), results[2][1])
+    # results2 = (results[2][0].decode('utf-8'), results[2][1])
     # top_artists = [tup[0] for tup in results] # List of results
+    top_artists = ['David_Bowie', 'Mariah_Carey', 'Britney_Spears']
+    img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
+    txt_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['text_summary'].iloc[0] for name in top_artists]
+    max_text_length = 430
+    for i in range(len(txt_url)):
+        if len(txt_url[i])> max_text_length:
+            txt_url[i] = txt_url[i][:max_text_length] + '...'
 
+
+    # Get the images and text
     # #Query for images
     # # img_src_list = do_list_query(top_artists)
 
     # #Query both images and url
     # img_url_list = do_en_imgurl_query(top_artists)
 
+
     # results2 = [[artist.replace('_',' '), imgurl[0], imgurl[1]] for artist, imgurl in zip(top_artists, img_url_list)]
+    results2 = [[artist.replace('_',' '), imgurl, txturl] for artist, imgurl, txturl in zip(top_artists, img_url, txt_url)]
 
     # add_terms, sub_terms = parse_list([input_add_string, input_subtract_string])
 
-    # return render_template("output.html", length = len(sub_terms[0]), add_list = input_add_string,
-    #     subtract_list = input_subtract_string)
-
     return render_template("output.html", add_list = input_add_string,
-        subtract_list = input_subtract_string, results_list = results)#results2) #, img_src_list = img_src_list)
+        subtract_list = input_subtract_string, results_list = results2) #, img_src_list = img_src_list)
 
 @app.route('/about')
 def about():

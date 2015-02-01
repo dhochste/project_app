@@ -73,68 +73,39 @@ def parse_list(input_string,lower=False):
 	if len(add_str)>0 and len(sub_str)>0:
 		add_terms = re.split(r'; *', add_str)
 		sub_terms = re.split(r'; *', sub_str)
-
+		#convert ampersand
+		add_terms = [string.replace('&','&amp;') for string in add_terms]
+		sub_terms = [string.replace('&','&amp;') for string in sub_terms]
+		#deal with spaces before first name:
+		add_terms[0] = add_terms[0].lstrip()
+		sub_terms[0] = sub_terms[0].lstrip()
 		# make everything lower-case:
 		if lower:
 			add_terms = [x.lower() for x in add_terms]
 			sub_terms = [x.lower() for x in sub_terms]
-
+		# replace spaces
 		add_terms = [name.replace(' ','_') for name in add_terms]
 		sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 	elif len(add_str)>0:
 		add_terms = re.split(r'; *', add_str)
 		sub_terms = []
+		#convert amperstand
+		add_terms = [string.replace('&','&amp;') for string in add_terms]
+		#deal with spaces before first name:
+		add_terms[0] = add_terms[0].lstrip()
 		# make everything lower-case:
 		if lower:
 			add_terms = [x.lower() for x in add_terms]
-
+		# replace spaces
 		add_terms = [name.replace(' ','_') for name in add_terms]
 
 	else:
 		add_terms = []
 		sub_terms = []
 
-
-	# if len(sub_str) == 0:
-	# 	sub_terms =[]
-
-	# Get rid of leading and spaces if they exist
-
-	# parse strings for actual terms
-	# add_terms = [add_str]
-	# sub_terms = [sub_str]
-	# sub_terms = []
-
-	# print len(add_terms)
-
-
-	# add_terms = re.split(r'; *', add_str)
-	# sub_terms = re.split(r'; *', sub_str)
-	# sub_terms =[]
-	# if len(add_terms[0]) == 0:
-	# 	add_terms = []
-	# if len(sub_terms[0]) == 0:
-	# 	sub_terms ==[]
-
-
 	# add_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', add_str)
 	# sub_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', sub_str)
-	
-	# get rid of leading space, if exist
-	# add_terms[0] = re.search(r'(\s*)([\w+\s*]+)',add_terms[0]).group(2)
-	# sub_terms[0] = re.search(r'(\s*)([\w+\s*]+)',sub_terms[0]).group(2)
-	# get rid of any trailing spaces
-	# ???? HOW TO?????
-	# match = re.search(r'(\s*)([\w+\s*]+)',temp_list[0])
-
-	# make everything lower-case:
-	if lower:
-		add_terms = [x.lower() for x in add_terms]
-		sub_terms = [x.lower() for x in sub_terms]
-
-	# add_terms = [name.replace(' ','_') for name in add_terms]
-	# sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 	return add_terms, sub_terms
 
@@ -145,36 +116,24 @@ def model_app_results(df_artist_title,input_string,artist_list,title_list,
 	Runs the gensim Doc2Vec model with the input string after parsing for
 	positive and negative terms
 	"""
-	# Convert from unicode to strings
-	# add_str = str(input_string[0])
-	# sub_str = str(input_string[1])
-
-	# # parse strings for actual terms
-	# add_terms = re.findall(r'([\w+\s*]+)[,\s]*', add_str)
-	# add_terms = re.findall(r'([\w+\s*]+)[,\s]*', sub_str)
-
-	# # get rid of leading spaces
-
-	# add_terms = [name.replace(' ','_') for name in add_terms]
-	# sub_terms = [name.replace(' ',)]
-	# # add_terms = re.findall(r'(\w+)[,]*', add_str)
-	# # sub_terms = re.findall(r'(\w+)[,]*', sub_str)
-
-	# # make everything lower-case:
-	# if lower:
-	# 	add_terms = [x.lower() for x in add_terms]
-	# 	sub_terms = [x.lower() for x in sub_terms]
 	add_terms, sub_terms = parse_list(input_string,lower)
+
+	"""A NUMBER OF OPTIONS... BE SURE TO USE THE SELECTION METHOD YOU WANT!"""
 
 	# results = model.most_similar(add_terms, sub_terms, topn=15)
 
-	results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
-		artist_list, title_list, list_len, model)
+
+	try:
+		results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
+			artist_list, title_list, list_len, model)
+		# key_error_message = 0
+	except KeyError as ke:
+		results = ke
 
 	# results = most_similar_artists_w_genre(add_terms, sub_terms,
 	# 	artist_list, music_genre_lookup, model, list_len)
 
-	return results
+	return results #, key_error_message
 
 def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_terms=[], 
 	artist_list=[], title_list=[], list_len=10, doc2Vec_model = None):
@@ -184,7 +143,6 @@ def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_ter
     Based on similar method developed by Ben Everson. Thanks, Ben!
     """
     all_search_terms = positive_terms+negative_terms
-    # find the array of distances for all terms
     distances = doc2Vec_model.most_similar(positive=positive_terms, 
     	negative=negative_terms, topn=10*list_len)
 
