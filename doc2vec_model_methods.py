@@ -26,6 +26,13 @@ def create_artist_list(df):
 
 	return artist_list
 
+def df_find_artist(df,title):
+	"""
+	Find the artist for a given title from an artist-title dataframe.
+	"""
+	artist = df[df['title'] == title]['artist'].iloc[0]
+	return artist
+
 
 def create_genre_lookup(df):
 	"""
@@ -63,11 +70,57 @@ def parse_list(input_string,lower=False):
 	add_str = str(input_string[0])
 	sub_str = str(input_string[1])
 
-	# Get rid of leading and spaces if they exis
+	if len(add_str)>0 and len(sub_str)>0:
+		add_terms = re.split(r'; *', add_str)
+		sub_terms = re.split(r'; *', sub_str)
+
+		# make everything lower-case:
+		if lower:
+			add_terms = [x.lower() for x in add_terms]
+			sub_terms = [x.lower() for x in sub_terms]
+
+		add_terms = [name.replace(' ','_') for name in add_terms]
+		sub_terms = [name.replace(' ','_') for name in sub_terms]
+
+	elif len(add_str)>0:
+		add_terms = re.split(r'; *', add_str)
+		sub_terms = []
+		# make everything lower-case:
+		if lower:
+			add_terms = [x.lower() for x in add_terms]
+
+		add_terms = [name.replace(' ','_') for name in add_terms]
+
+	else:
+		add_terms = []
+		sub_terms = []
+
+
+	# if len(sub_str) == 0:
+	# 	sub_terms =[]
+
+	# Get rid of leading and spaces if they exist
 
 	# parse strings for actual terms
-	add_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', add_str)
-	sub_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', sub_str)
+	# add_terms = [add_str]
+	# sub_terms = [sub_str]
+	# sub_terms = []
+
+	# print len(add_terms)
+
+
+	# add_terms = re.split(r'; *', add_str)
+	# sub_terms = re.split(r'; *', sub_str)
+	# sub_terms =[]
+	# if len(add_terms[0]) == 0:
+	# 	add_terms = []
+	# if len(sub_terms[0]) == 0:
+	# 	sub_terms ==[]
+
+
+	# add_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', add_str)
+	# sub_terms = re.findall(r'([\w\-\.+\s*]+)[,\s]*', sub_str)
+	
 	# get rid of leading space, if exist
 	# add_terms[0] = re.search(r'(\s*)([\w+\s*]+)',add_terms[0]).group(2)
 	# sub_terms[0] = re.search(r'(\s*)([\w+\s*]+)',sub_terms[0]).group(2)
@@ -80,14 +133,14 @@ def parse_list(input_string,lower=False):
 		add_terms = [x.lower() for x in add_terms]
 		sub_terms = [x.lower() for x in sub_terms]
 
-	add_terms = [name.replace(' ','_') for name in add_terms]
-	sub_terms = [name.replace(' ','_') for name in sub_terms]
+	# add_terms = [name.replace(' ','_') for name in add_terms]
+	# sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 	return add_terms, sub_terms
 
 
-def model_app_results(input_string,artist_list,music_genre_lookup,
-	model,list_len=10, lower=False):
+def model_app_results(df_artist_title,input_string,artist_list,title_list, 
+	music_genre_lookup,model,list_len=10, lower=False):
 	"""
 	Runs the gensim Doc2Vec model with the input string after parsing for
 	positive and negative terms
@@ -113,13 +166,69 @@ def model_app_results(input_string,artist_list,music_genre_lookup,
 	# 	sub_terms = [x.lower() for x in sub_terms]
 	add_terms, sub_terms = parse_list(input_string,lower)
 
-	results = most_similar_artists(add_terms, sub_terms, artist_list, 
-		list_len, model)
+	# results = model.most_similar(add_terms, sub_terms, topn=15)
+
+	results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
+		artist_list, title_list, list_len, model)
 
 	# results = most_similar_artists_w_genre(add_terms, sub_terms,
 	# 	artist_list, music_genre_lookup, model, list_len)
 
 	return results
+
+def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_terms=[], 
+	artist_list=[], title_list=[], list_len=10, doc2Vec_model = None):
+    """
+    Returns a list of tuples: (artist, similarity score) given pos and neg 
+    input vocab and a list of all artists. Uses a trained doc2vec_model as input.
+    Based on similar method developed by Ben Everson. Thanks, Ben!
+    """
+    all_search_terms = positive_terms+negative_terms
+    # find the array of distances for all terms
+    distances = doc2Vec_model.most_similar(positive=positive_terms, 
+    	negative=negative_terms, topn=10*list_len)
+
+	# artists = []
+    artists_titles = []
+    # titles = []
+    for tup in distances:
+    	if tup[0] in artist_list and tup[0] not in all_search_terms:
+    		artists_titles.append([tup[0],' -- ',tup[1]])
+    		# Add artist to all_serch_terms so as to not repeat same results
+    		all_search_terms.append(tup[0])
+    		# all_search_terms = all_search_terms + tup[0]
+    	elif tup[0] in title_list and tup[0] not in all_search_terms:
+    		artist = df_find_artist(df_artist_title,tup[0])
+    		if artist not in all_search_terms and artist !='':
+    			artists_titles.append([artist,tup[0],tup[1]])
+    			all_search_terms.append(artist)
+    			# all_search_terms = all_search_terms+ artist
+    return artists_titles[:list_len]
+
+
+def most_similar_artists(positive_terms=[], negative_terms=[], 
+	artist_list=[], list_len=10, doc2Vec_model = None):
+    """
+    Returns a list of tuples: (artist, similarity score) given pos and neg 
+    input vocab and a list of all artists. Uses a trained doc2vec_model as input.
+    Based on similar method developed by Ben Everson. Thanks, Ben!
+    """
+    all_search_terms = positive_terms+negative_terms
+    # find the array of distances for all terms
+    distances = doc2Vec_model.most_similar(positive=positive_terms, 
+    	negative=negative_terms, topn=10*list_len)
+
+    # print distances[:10]
+    # # sort array and convert to indices, rather than raw values (which are returned)
+    # best_distance_indices = np.argsort(distances)[::-1]
+    # # best_distance_indices = np.argsort([tuple[1] for tuple in temp_distances])[::-1]
+    # print best_distance_indices[:10]
+    # build a dict of artists with assosciated distances
+    artists = []
+    for tup in distances:
+    	if tup[0] in artist_list and tup[0] not in all_search_terms:
+    		artists.append(tup)
+    return artists[:list_len]
 
 
 def most_similar_artists_w_genre(positive_terms=[], negative_terms=[], 
@@ -155,31 +264,6 @@ def most_similar_artists_w_genre(positive_terms=[], negative_terms=[],
 	# 		artists.append((vocab_word, float(distances[dist_index]))) # assign the score to the entry
 
 	# return artists
-
-
-def most_similar_artists(positive_terms=[], negative_terms=[], 
-	artist_list=[], list_len=10, doc2Vec_model = None):
-    """
-    Returns a list of tuples: (artist, similarity score) given pos and neg 
-    input vocab and a list of all artists. Uses a trained doc2vec_model as input.
-    Based on similar method developed by Ben Everson. Thanks, Ben!
-    """
-    all_search_terms = positive_terms+negative_terms
-    # find the array of distances for all terms
-    distances = doc2Vec_model.most_similar(positive=positive_terms, 
-    	negative=negative_terms, topn=10*list_len)
-
-    # print distances[:10]
-    # # sort array and convert to indices, rather than raw values (which are returned)
-    # best_distance_indices = np.argsort(distances)[::-1]
-    # # best_distance_indices = np.argsort([tuple[1] for tuple in temp_distances])[::-1]
-    # print best_distance_indices[:10]
-    # build a dict of artists with assosciated distances
-    artists = []
-    for tup in distances:
-    	if tup[0] in artist_list and tup[0] not in all_search_terms:
-    		artists.append(tup)
-    return artists[:list_len]
 
 
 def most_similar_artists_old(positive_terms=[], negative_terms=[], 

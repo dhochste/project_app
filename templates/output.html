@@ -88,7 +88,7 @@
         <p class="lead">Subtracting: {{subtract_list}} </p>
       </div>
 
-      <div class="row">
+      <!--<div class="row">
         {% for result in results_list %}
         
         <div class="col-md-6"> 
@@ -97,14 +97,17 @@
           </div>
 
         {% endfor %}
-      </div>
+      </div> -->
 
-    <!--<table class="table table-hover">
-      <tr><th>Result</th><th>Score</th></tr>
+    <!-- <h1> {{ length }} </h1> -->
+
+    <table class="table table-hover">
+      <tr><th>Artist</th><th>Title</th><th>Score</th></tr>
       {% for result in results_list %}
-      <tr><td>{{ result[0]}}</td><td>{{ result[1]}}</td></tr>
+      <!-- <tr><td>{{ result[0]}}</td><td> Testing</td><td>{{ result[2]}} </td></tr>  -->
+      <tr><td>{{ result[0]}}</td><td>{{ result[1]}}</td><td>{{ result[2]}} </td></tr>
       {% endfor %}
-    </table>-->
+    </table>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
