@@ -93,9 +93,6 @@
         <p class="lead">Subtracting: {{subtract_list}} </p>
       </div>
 
-    <p> <a href="http://www.neilyoung.com/" rel="nofollow">Neil Percival Young</a> (born November 12, 1945) is a Canadian <a href="http://www.last.fm/tag/singer-songwriter" class="bbcode_tag" rel="tag">singer-songwriter</a>, guitarist, and social activist who is widely regarded as one of the most influential musicians of his generation, particularly as <a href="http://www.last.fm/music/Neil+Young+&amp;+Crazy+Horse" class="bbcode_artist">Neil Young &amp; Crazy Horse</a>. Young was born in Toronto, but he moved to the family home of Winnipeg as a child, which is where his music career began. Young began performing as a solo artist in Canada in 1960, before moving to California in 1966, where he co-founded the band <a href="http://www.last.fm/music/Buffalo+Springfield" class="bbcode_artist">Buffalo Springfield</a> along with <a href="http://www.last.fm/music/Stephen+Stills" class="bbcode_artist">Stephen Stills</a> and <a href="http://www.last.fm/music/Richie+Furay" class="bbcode_artist">Richie Furay</a>.   </p>
-    <img src= 'http://userserve-ak.last.fm/serve/126/98319343.png' class = "img-rounded"> 
-
     {% if results_list[0][0:4] == 'word' %} 
       <div class="starter-template">
         <p class="lead"> Oops! <b>{{results_list[0][5:-18]}}</b> is not in our vocabulary. Some tips for your next try:</p>
@@ -111,7 +108,7 @@
         {% for result in results_list %}
         
         <div class="col-md-4"> 
-          <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded"> 
+          <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded" align="left"> 
           <p>{{ result[2] | safe }} </p>
         </div>
 

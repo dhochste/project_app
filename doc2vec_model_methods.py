@@ -99,6 +99,18 @@ def parse_list(input_string,lower=False):
 			add_terms = [x.lower() for x in add_terms]
 		# replace spaces
 		add_terms = [name.replace(' ','_') for name in add_terms]
+	elif len(sub_str)>0:
+		sub_terms = re.split(r'; *', sub_str)
+		add_terms = []
+		#convert amperstand
+		sub_terms = [string.replace('&','&amp;') for string in sub_terms]
+		#deal with spaces before first name:
+		sub_terms[0] = sub_terms[0].lstrip()
+		# make everything lower-case:
+		if lower:
+			sub_terms = [x.lower() for x in sub_terms]
+		# replace spaces
+		sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 	else:
 		add_terms = []
@@ -124,16 +136,18 @@ def model_app_results(df_artist_title,input_string,artist_list,title_list,
 
 
 	try:
-		results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
-			artist_list, title_list, list_len, model)
-		# key_error_message = 0
+		# results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
+		# 	artist_list, title_list, list_len, model)
+		results = most_similar_artists(add_terms, sub_terms, artist_list, list_len, model)
+		key_error = False
 	except KeyError as ke:
 		results = ke
+		key_error = True
 
 	# results = most_similar_artists_w_genre(add_terms, sub_terms,
 	# 	artist_list, music_genre_lookup, model, list_len)
 
-	return results #, key_error_message
+	return results, key_error#, key_error_message
 
 def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_terms=[], 
 	artist_list=[], title_list=[], list_len=10, doc2Vec_model = None):
@@ -174,14 +188,8 @@ def most_similar_artists(positive_terms=[], negative_terms=[],
     all_search_terms = positive_terms+negative_terms
     # find the array of distances for all terms
     distances = doc2Vec_model.most_similar(positive=positive_terms, 
-    	negative=negative_terms, topn=10*list_len)
+    	negative=negative_terms, topn=20*list_len)
 
-    # print distances[:10]
-    # # sort array and convert to indices, rather than raw values (which are returned)
-    # best_distance_indices = np.argsort(distances)[::-1]
-    # # best_distance_indices = np.argsort([tuple[1] for tuple in temp_distances])[::-1]
-    # print best_distance_indices[:10]
-    # build a dict of artists with assosciated distances
     artists = []
     for tup in distances:
     	if tup[0] in artist_list and tup[0] not in all_search_terms:

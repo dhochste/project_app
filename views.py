@@ -42,19 +42,41 @@ def output():
 
     # results = model_music([input_add_string, input_subtract_string],app.model)
     # results = [ [x,x,x] for x in app.title_list[:10]]
-    results = model_app_results(app.df_artist_title,
+    results, key_error = model_app_results(app.df_artist_title,
         [input_add_string, input_subtract_string],app.artist_list,
-        app.title_list,app.genre_lookup,app.model,list_len=10,lower=False)
+        app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
 
     # results2 = (results[2][0].decode('utf-8'), results[2][1])
-    # top_artists = [tup[0] for tup in results] # List of results
-    top_artists = ['David_Bowie', 'Mariah_Carey', 'Britney_Spears']
-    img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
-    txt_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['text_summary'].iloc[0] for name in top_artists]
-    max_text_length = 430
-    for i in range(len(txt_url)):
-        if len(txt_url[i])> max_text_length:
-            txt_url[i] = txt_url[i][:max_text_length] + '...'
+    # if len(results) == 1 and results[0][0:4] == 'word': #There's an error in one of the search terms
+    if key_error:
+        results2 = results
+    else:
+        top_artists = [tup[0] for tup in results] # List of results
+        img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
+        txt_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['text_summary'].iloc[0] for name in top_artists]
+        max_text_length = 430
+        for i in range(len(txt_url)):
+            if len(txt_url[i])> max_text_length:
+                txt_url[i] = txt_url[i][:max_text_length] + '...'
+        # Get artist into presentable form:
+
+        results2 = [[artist.replace('_',' ').replace('&amp;','&'), imgurl, txturl] for artist, imgurl, txturl in zip(top_artists, img_url, txt_url)]
+
+
+    # sub_terms = re.split(r'; *', sub_str)
+    #     #convert ampersand
+    #     add_terms = [string.replace('&','&amp;') for string in add_terms]
+    #     sub_terms = [string.replace('&','&amp;') for string in sub_terms]
+    #     #deal with spaces before first name:
+    #     add_terms[0] = add_terms[0].lstrip()
+    #     sub_terms[0] = sub_terms[0].lstrip()
+    #     # make everything lower-case:
+    #     if lower:
+    #         add_terms = [x.lower() for x in add_terms]
+    #         sub_terms = [x.lower() for x in sub_terms]
+    #     # replace spaces
+    #     add_terms = [name.replace(' ','_') for name in add_terms]
+    #     sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 
     # Get the images and text
@@ -64,10 +86,7 @@ def output():
     # #Query both images and url
     # img_url_list = do_en_imgurl_query(top_artists)
 
-
     # results2 = [[artist.replace('_',' '), imgurl[0], imgurl[1]] for artist, imgurl in zip(top_artists, img_url_list)]
-    results2 = [[artist.replace('_',' '), imgurl, txturl] for artist, imgurl, txturl in zip(top_artists, img_url, txt_url)]
-
     # add_terms, sub_terms = parse_list([input_add_string, input_subtract_string])
 
     return render_template("output.html", add_list = input_add_string,
