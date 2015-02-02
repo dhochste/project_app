@@ -38,16 +38,10 @@ def output():
     input_add_string = request.args.get('inputAdd')
     input_subtract_string = request.args.get('inputSubtract')
 
-    #Hard coding
-
-    # results = model_music([input_add_string, input_subtract_string],app.model)
-    # results = [ [x,x,x] for x in app.title_list[:10]]
     results, key_error = model_app_results(app.df_artist_title,
         [input_add_string, input_subtract_string],app.artist_list,
         app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
 
-    # results2 = (results[2][0].decode('utf-8'), results[2][1])
-    # if len(results) == 1 and results[0][0:4] == 'word': #There's an error in one of the search terms
     if key_error:
         results2 = results
     else:
@@ -59,24 +53,7 @@ def output():
             if len(txt_url[i])> max_text_length:
                 txt_url[i] = txt_url[i][:max_text_length] + '...'
         # Get artist into presentable form:
-
         results2 = [[artist.replace('_',' ').replace('&amp;','&'), imgurl, txturl] for artist, imgurl, txturl in zip(top_artists, img_url, txt_url)]
-
-
-    # sub_terms = re.split(r'; *', sub_str)
-    #     #convert ampersand
-    #     add_terms = [string.replace('&','&amp;') for string in add_terms]
-    #     sub_terms = [string.replace('&','&amp;') for string in sub_terms]
-    #     #deal with spaces before first name:
-    #     add_terms[0] = add_terms[0].lstrip()
-    #     sub_terms[0] = sub_terms[0].lstrip()
-    #     # make everything lower-case:
-    #     if lower:
-    #         add_terms = [x.lower() for x in add_terms]
-    #         sub_terms = [x.lower() for x in sub_terms]
-    #     # replace spaces
-    #     add_terms = [name.replace(' ','_') for name in add_terms]
-    #     sub_terms = [name.replace(' ','_') for name in sub_terms]
 
 
     # Get the images and text

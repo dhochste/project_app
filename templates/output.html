@@ -105,9 +105,19 @@
       </div>
     {% else %}
       <div class="row">
-        {% for result in results_list %}
+        {% for result in results_list[:3] %}
         
-        <div class="col-md-4"> 
+        <div class="col-sm-4"> 
+          <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded" align="left"> 
+          <p>{{ result[2] | safe }} </p>
+        </div>
+
+        {% endfor %}
+      </div> 
+      <div class="row">
+        {% for result in results_list[3:] %}
+        
+        <div class="col-sm-4"> 
           <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded" align="left"> 
           <p>{{ result[2] | safe }} </p>
         </div>
