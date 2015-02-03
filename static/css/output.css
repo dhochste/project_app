@@ -1,0 +1,53 @@
+/*!
+ * For mixTunes.in by David Hochstetler
+ */
+.container-col-all{
+ 	float:left;
+ 	width:100%;
+ 	background: red;
+ 	/*right: 40%;*/
+ 	/*position: relative;*/
+}
+.container-col-a{
+ 	float:left;
+ 	width:100%;
+ 	background: red;
+ 	right: 40%;
+ 	position: relative;
+}
+.container-col-b{
+ 	float:left;
+ 	width:100%;
+ 	background: yellow;
+ 	right: 30%;
+ 	position: relative;
+}
+.container-col-c{
+ 	float:left;
+ 	width:100%;
+ 	background: green;
+ 	overflow: hidden;
+ 	position: relative;
+ }
+ .music-col-3a{
+ 	float: left;
+ 	/*position: relative;*/
+ 	width: 30%;
+ 	/*left: 0%;*/
+ 	overflow:hidden;
+}
+.music-col-3b{
+ 	/*float: left;*/
+ 	text-align: center
+ 	/*position: relative;*/
+ 	width: 30%;
+ 	/*left: 0%;*/
+ 	overflow: hidden;
+}
+.music-col-3c{
+ 	float: right;
+ 	/*position: relative;*/
+ 	width: 30%;
+ 	/*left: 80%;*/
+ 	overflow: hidden;
+ }
