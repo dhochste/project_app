@@ -11,6 +11,7 @@ from doc2vec_model_methods import most_similar_artists
 from doc2vec_model_methods import most_similar_artists_w_genre
 from doc2vec_model_methods import parse_list
 from api_query import do_en_imgurl_query
+from bs4 import BeautifulSoup
 
 # from a_Model import ModelIt #This willbe my model
 
@@ -37,6 +38,8 @@ def output():
     #pull 'ID' from input field and store it
     input_add_string = request.args.get('inputAdd')
     input_subtract_string = request.args.get('inputSubtract')
+    test_radio = request.args.get('optionsRadios')
+    print test_radio
 
     results, key_error = model_app_results(app.df_artist_title,
         [input_add_string, input_subtract_string],app.artist_list,
@@ -48,8 +51,10 @@ def output():
         top_artists = [tup[0] for tup in results] # List of results
         img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
         txt_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['text_summary'].iloc[0] for name in top_artists]
-        max_text_length = 430
+        max_text_length = 400
         for i in range(len(txt_url)):
+            # Use BeautifulSoup to remove html
+            txt_url[i] = BeautifulSoup(txt_url[i]).get_text()
             if len(txt_url[i])> max_text_length:
                 txt_url[i] = txt_url[i][:max_text_length] + '...'
         # Get artist into presentable form:

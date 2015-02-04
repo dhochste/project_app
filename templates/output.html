@@ -8,7 +8,7 @@
     <meta name="author" content="David L. Hochstetler">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>kickOut Results</title>
+    <title>mixTunes.in</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="./">kickOut.jams</a>
+          <a class="navbar-brand" href="./">mixTunes.in</a>
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
@@ -56,36 +56,59 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>kickOut.jams!</h1>
+        <h1>mixTunes.in!</h1>
         <p>Find your new groove.</p>
       </div>
 
       <div class = "container">
         <div class="starter-template">
           <p class="lead"> Separate <strong>artists</strong> and/or <strong>album</strong> and/or <strong>descriptions</strong> by semicolons<strong>(;)</strong> </p>
-        </div>
+        
+          <!-- <form class="form-inline" action="/output" method="GET"> -->
+          <form class="form-horizontal" action="/output" name="inputform" method="GET">
 
-        <!-- <form class="form-inline" action="/output" method="GET"> -->
-        <form class="form-inline" action="/output" method="GET">
-          <div class="form-group">
-            <label for="ID">Add: </label>
-            <input type="text" class="form-control" id="inputAdd" name="inputAdd" placeholder="e.g., Adele">
-          </div>
+            <div class="form-group">
+              <label class="col-md-1 control-label" for="formGroupInputAdd">Add </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="inputAdd" name="inputAdd" placeholder="e.g., Ace of Base">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-1 control-label" for="formGroupInputSubtract">Subtract </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="inputSubtract" name="inputSubtract">
+              </div>
+            </div>
+            <div class="radio col-sm-2">
+              <label>
+                <input type="radio" name="optionsRadios" id="radioArtist" value="optionArtist" checked> Discover Artist
+              </label>
+            </div>
+            <div class="radio col-sm-2">
+              <label>
+                <input type="radio" name="optionsRadios" id="radioTitle" value="optionTitle"> Discover Album
+              </label>
+            </div>
+            <div class="form-group col-sm-2">
+              <button type="submit" class="btn btn-lg btn-primary"> Find new groove! </button>
+            </div>
+            
+          </form><!-- form-horizontal -->
 
-          <div class="form-group">
-            <label for="ID">Subtract: </label>
-            <input type="text" class="form-control" id="inputSubtract" name="inputSubtract" placeholder="e.g., Blues">
-          </div>
+        </div><!-- starter-template-->
+      </div><!-- container: Input forms-->
 
-          <div class="form-group">
-            <button type="submit" class="btn btn-lg btn-primary"> Go! </button>
-          </div>
-
-          <!-- <button type="submit" class="btn btn-lg btn-success"> + </button> -->
-        </form>
-      </div>
-
-    </div><!-- /.container-->
+      <div class = "container">
+        <ul>
+          <li> <a href=# onclick="document.inputform.inputAdd.value='Metallica';
+            document.inputform.inputSubtract.value='Rolling Stones';return false;" > Rock: Metal - Classic </a></li>
+          <li> <a href=# onclick="document.inputform.inputAdd.value='Rage Against the Machine; Soundgarden';
+            document.inputform.inputSubtract.value='';return false;"> 
+            Real-life rock combo</a> </li>
+          <li> <a href=# onclick="document.inputform.inputAdd.value='Jay-Z; classical; jazz';
+            document.inputform.inputSubtract.value='';return false;"> Mixing genres</a> </li>
+        </ul>
+      </div> <!-- container: Example Links -->
 
     <div class="container">
       <div class="starter-template">
@@ -102,32 +125,35 @@
           <li>If there is a "The" - include it!</li>
         </ul>
         <p class="lead"> Still having trouble? Then your artist title must not be one of the 10,000s we have. Sorry!</p>
-      </div>
+      </div> <!-- starter-template-->
     {% else %}
-      <div class="row">
-        {% for result in results_list[:3] %}
-        
-        <div class="col-sm-4"> 
-          <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded" align="left"> 
-          <p>{{ result[2] | safe }} </p>
-        </div>
+      <div class="starter-template">
+        <div class="row">
+          {% for result in results_list[:3] %}
+          
+          <div class="col-sm-4"> 
+            <h2><strong>{{ result[0]}}</strong></h2> <img src= {{ result[1] }} class="img-rounded" align="left" Hspace="10"> 
+            <p>{{ result[2] | safe }} </p>
+          </div>
 
-        {% endfor %}
-      </div> 
-      <div class="row">
-        {% for result in results_list[3:] %}
-        
-        <div class="col-sm-4"> 
-          <h1><strong>{{ result[0]}}</strong></h1> <img src= {{ result[1] }} class="img-rounded" align="left"> 
-          <p>{{ result[2] | safe }} </p>
-        </div>
+          {% endfor %}
+        </div> 
+        <div class="row">
+          {% for result in results_list[3:] %}
+          
+          <div class="col-sm-4"> 
+            <h2><strong>{{ result[0]}}</strong></h2> <img src= {{ result[1] }} class="img-rounded" align="left" Hspace="10"> 
+            <p>{{ result[2] }} </p>
+          </div>
 
-        {% endfor %}
-      </div> 
+          {% endfor %}
+        </div> 
+      </div> <!-- starter-template-->
     {% endif %}
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
+
 
     </div><!-- /.container -->
 
