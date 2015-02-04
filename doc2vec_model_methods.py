@@ -63,7 +63,7 @@ def populate_artist_genres(artist_list, music_genre_dict):
 		else:
 			populated_list.append(artist)
 
-	return populated_list
+	return populated_listo
 
 def parse_list(input_string,lower=False):
 	# Convert from unicode to strings
@@ -122,7 +122,7 @@ def parse_list(input_string,lower=False):
 	return add_terms, sub_terms
 
 
-def model_app_results(df_artist_title,input_string,artist_list,title_list, 
+def model_app_results(radio_type,df_artist_title,input_string,artist_list,title_list, 
 	music_genre_lookup,model,list_len=10, lower=False):
 	"""
 	Runs the gensim Doc2Vec model with the input string after parsing for
@@ -134,15 +134,23 @@ def model_app_results(df_artist_title,input_string,artist_list,title_list,
 
 	# results = model.most_similar(add_terms, sub_terms, topn=15)
 
-
-	try:
-		# results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
-		# 	artist_list, title_list, list_len, model)
-		results = most_similar_artists(add_terms, sub_terms, artist_list, list_len, model)
-		key_error = False
-	except KeyError as ke:
-		results = ke
-		key_error = True
+	if radio_type == 'optionArtist':
+		try:
+			# results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
+			# 	artist_list, title_list, list_len, model)
+			results = most_similar_artists(add_terms, sub_terms, artist_list, list_len, model)
+			key_error = False
+		except KeyError as ke:
+			results = ke
+			key_error = True
+	elif radio_type == 'optionAlbum':
+		try:
+			results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
+				artist_list, title_list, list_len, model)
+			key_error = False
+		except KeyError as ke:
+			results = ke
+			key_error = True
 
 	# results = most_similar_artists_w_genre(add_terms, sub_terms,
 	# 	artist_list, music_genre_lookup, model, list_len)
@@ -152,7 +160,7 @@ def model_app_results(df_artist_title,input_string,artist_list,title_list,
 def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_terms=[], 
 	artist_list=[], title_list=[], list_len=10, doc2Vec_model = None):
     """
-    Returns a list of tuples: (artist, similarity score) given pos and neg 
+    Returns a list of tuples: (artist, title, similarity score) given pos and neg 
     input vocab and a list of all artists. Uses a trained doc2vec_model as input.
     Based on similar method developed by Ben Everson. Thanks, Ben!
     """
@@ -164,17 +172,24 @@ def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_ter
     artists_titles = []
     # titles = []
     for tup in distances:
-    	if tup[0] in artist_list and tup[0] not in all_search_terms:
-    		artists_titles.append([tup[0],' -- ',tup[1]])
-    		# Add artist to all_serch_terms so as to not repeat same results
-    		all_search_terms.append(tup[0])
-    		# all_search_terms = all_search_terms + tup[0]
-    	elif tup[0] in title_list and tup[0] not in all_search_terms:
+    	if tup[0] in title_list and tup[0] not in all_search_terms:
+    		# find the artist
     		artist = df_find_artist(df_artist_title,tup[0])
     		if artist not in all_search_terms and artist !='':
     			artists_titles.append([artist,tup[0],tup[1]])
     			all_search_terms.append(artist)
-    			# all_search_terms = all_search_terms+ artist
+    			# all_search_terms = all_search_terms+ artist    			
+    	# if tup[0] in artist_list and tup[0] not in all_search_terms:
+    	# 	artists_titles.append([tup[0],' -- ',tup[1]])
+    	# 	# Add artist to all_serch_terms so as to not repeat same results
+    	# 	all_search_terms.append(tup[0])
+    	# 	# all_search_terms = all_search_terms + tup[0]
+    	# elif tup[0] in title_list and tup[0] not in all_search_terms:
+    	# 	artist = df_find_artist(df_artist_title,tup[0])
+    	# 	if artist not in all_search_terms and artist !='':
+    	# 		artists_titles.append([artist,tup[0],tup[1]])
+    	# 		all_search_terms.append(artist)
+    	# 		# all_search_terms = all_search_terms+ artist
     return artists_titles[:list_len]
 
 

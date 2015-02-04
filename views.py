@@ -29,19 +29,16 @@ db = mdb.connect(user="root", host="localhost", passwd=passwd,
 def index():
     return render_template("index.html")
 
-@app.route('/cont_input')
-def cont_input():
-    add_string = request.args.get
-
 @app.route('/output')
 def output():
-    #pull 'ID' from input field and store it
+    #pull from input field name the value
     input_add_string = request.args.get('inputAdd')
     input_subtract_string = request.args.get('inputSubtract')
-    test_radio = request.args.get('optionsRadios')
-    print test_radio
+    radio_option = request.args.get('optionsRadios')
+    print(radio_option)
+    print(type(radio_option))
 
-    results, key_error = model_app_results(app.df_artist_title,
+    results, key_error = model_app_results(radio_option,app.df_artist_title,
         [input_add_string, input_subtract_string],app.artist_list,
         app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
 
@@ -57,22 +54,19 @@ def output():
             txt_url[i] = BeautifulSoup(txt_url[i]).get_text()
             if len(txt_url[i])> max_text_length:
                 txt_url[i] = txt_url[i][:max_text_length] + '...'
-        # Get artist into presentable form:
-        results2 = [[artist.replace('_',' ').replace('&amp;','&'), imgurl, txturl] for artist, imgurl, txturl in zip(top_artists, img_url, txt_url)]
 
-
-    # Get the images and text
-    # #Query for images
-    # # img_src_list = do_list_query(top_artists)
-
-    # #Query both images and url
-    # img_url_list = do_en_imgurl_query(top_artists)
-
-    # results2 = [[artist.replace('_',' '), imgurl[0], imgurl[1]] for artist, imgurl in zip(top_artists, img_url_list)]
-    # add_terms, sub_terms = parse_list([input_add_string, input_subtract_string])
+        if radio_option == 'optionArtist':
+            # Get artist into presentable form:
+            results2 = [[artist.replace('_',' ').replace('&amp;','&'), imgurl, txturl] for artist, imgurl, 
+                txturl in zip(top_artists, img_url, txt_url)]
+        elif radio_option == 'optionAlbum':
+            # Get artist into presentable form:
+            top_titles = [tup[1] for tup in results] # List of results
+            results2 = [[artist.replace('_',' ').replace('&amp;','&'), title.replace('_',' ').replace('&amp;','&'),
+                imgurl, txturl] for artist, title, imgurl, txturl in zip(top_artists, top_titles, img_url, txt_url)]
 
     return render_template("output.html", add_list = input_add_string,
-        subtract_list = input_subtract_string, results_list = results2) #, img_src_list = img_src_list)
+        subtract_list = input_subtract_string, radio_type = radio_option, key_error = key_error, results_list = results2)
 
 @app.route('/about')
 def about():
