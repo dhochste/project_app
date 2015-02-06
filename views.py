@@ -77,5 +77,5 @@ def about():
 
 @app.route('/slides')
 def slides():
-    return render_template("about.html")
+    return render_template("slides.html")
 
