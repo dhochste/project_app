@@ -139,18 +139,18 @@ def model_app_results(radio_type,df_artist_title,input_string,artist_list,title_
 			# results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
 			# 	artist_list, title_list, list_len, model)
 			results = most_similar_artists(add_terms, sub_terms, artist_list, list_len, model)
-			key_error = False
+			key_error = 0
 		except KeyError as ke:
 			results = ke
-			key_error = True
+			key_error = 1
 	elif radio_type == 'optionAlbum':
 		try:
 			results = most_similar_artists_titles(df_artist_title, add_terms, sub_terms, 
 				artist_list, title_list, list_len, model)
-			key_error = False
+			key_error = 0
 		except KeyError as ke:
 			results = ke
-			key_error = True
+			key_error = 1
 
 	# results = most_similar_artists_w_genre(add_terms, sub_terms,
 	# 	artist_list, music_genre_lookup, model, list_len)
@@ -166,7 +166,7 @@ def most_similar_artists_titles(df_artist_title, positive_terms=[], negative_ter
     """
     all_search_terms = positive_terms+negative_terms
     distances = doc2Vec_model.most_similar(positive=positive_terms, 
-    	negative=negative_terms, topn=10*list_len)
+    	negative=negative_terms, topn=40*list_len)
 
 	# artists = []
     artists_titles = []
@@ -203,7 +203,7 @@ def most_similar_artists(positive_terms=[], negative_terms=[],
     all_search_terms = positive_terms+negative_terms
     # find the array of distances for all terms
     distances = doc2Vec_model.most_similar(positive=positive_terms, 
-    	negative=negative_terms, topn=20*list_len)
+    	negative=negative_terms, topn=40*list_len)
 
     artists = []
     for tup in distances:
@@ -227,7 +227,7 @@ def most_similar_artists_w_genre(positive_terms=[], negative_terms=[],
 	print all_search_terms
 	# find the array of distances for all terms
 	distances = doc2Vec_model.most_similar(positive=positive_latent, 
-		negative=negative_latent, topn=500)
+		negative=negative_latent, topn=40*list_len)
 
 	artists = []
 	for tup in distances:

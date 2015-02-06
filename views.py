@@ -35,16 +35,19 @@ def output():
     input_add_string = request.args.get('inputAdd')
     input_subtract_string = request.args.get('inputSubtract')
     radio_option = request.args.get('optionsRadios')
-    print(radio_option)
-    print(type(radio_option))
 
-    results, key_error = model_app_results(radio_option,app.df_artist_title,
-        [input_add_string, input_subtract_string],app.artist_list,
-        app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
-
-    if key_error:
-        results2 = results
+    #check if any inputs
+    if not input_add_string and not input_subtract_string:
+        key_error = 2
+        results2 = []
     else:
+        results, key_error = model_app_results(radio_option,app.df_artist_title,
+            [input_add_string, input_subtract_string],app.artist_list,
+            app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
+
+    if key_error == 1:
+        results2 = results
+    elif key_error == 0:
         top_artists = [tup[0] for tup in results] # List of results
         img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
         txt_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['text_summary'].iloc[0] for name in top_artists]

@@ -117,7 +117,9 @@
         <p class="lead">Subtracting: {{subtract_list}} </p>
       </div>
 
-    {% if key_error %} <!-- If KeyError: Input Not Found -->
+    {% if key_error == 2 %} <!-- If KeyError: Input Not Found -->
+
+    {% elif key_error == 1 %} <!-- If KeyError: Input Not Found -->
       <div class="starter-template">
         <p class="lead"> Oops! <b>{{results_list[0][5:-18]}}</b> is not in our vocabulary. Some tips for your next try:</p>
         <ul class="lead">
