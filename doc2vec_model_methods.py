@@ -65,6 +65,14 @@ def populate_artist_genres(artist_list, music_genre_dict):
 
 	return populated_listo
 
+def format_str(input_string,lower=False):
+	input_string = input_string.replace('&amp;','&')
+	input_string = input_string.replace('_',' ')
+	if lower:
+		input_string = input_string.lower()
+	return input_string
+
+
 def parse_list(input_string,lower=False):
 	# Convert from unicode to strings
 	add_str = str(input_string[0])
@@ -81,8 +89,8 @@ def parse_list(input_string,lower=False):
 		sub_terms[0] = sub_terms[0].lstrip()
 		# make everything lower-case:
 		if lower:
-			add_terms = [x.lower() for x in add_terms]
-			sub_terms = [x.lower() for x in sub_terms]
+			add_terms = [string.lower() for string in add_terms]
+			sub_terms = [string.lower() for string in sub_terms]
 		# replace spaces
 		add_terms = [name.replace(' ','_') for name in add_terms]
 		sub_terms = [name.replace(' ','_') for name in sub_terms]

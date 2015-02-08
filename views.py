@@ -10,6 +10,7 @@ from doc2vec_model_methods import populate_artist_genres
 from doc2vec_model_methods import most_similar_artists
 from doc2vec_model_methods import most_similar_artists_w_genre
 from doc2vec_model_methods import parse_list
+from doc2vec_model_methods import format_str
 from api_query import do_en_imgurl_query
 from bs4 import BeautifulSoup
 
@@ -46,7 +47,11 @@ def output():
             app.title_list,app.genre_lookup,app.model,list_len=6,lower=False)
 
     if key_error == 1:
-        results2 = results
+        # Edit results to be processed to remove _, etc.
+        results_str = str(results[0])
+        results_str = format_str(results_str)
+        results2 = results_str
+
     elif key_error == 0:
         top_artists = [tup[0] for tup in results] # List of results
         img_url = [app.df_artist_img_txt[app.df_artist_img_txt['artist']==name]['image'].iloc[0] for name in top_artists]
