@@ -66,7 +66,7 @@
           <p class="lead"> Separate <strong>artists</strong> and/or <strong>album</strong> and/or <strong>descriptions</strong> by semicolons<strong>(;)</strong> </p>
         
           <!-- <form class="form-inline" action="/output" method="GET"> -->
-          <form class="form-horizontal" action="/output" name="inputform" method="GET">
+          <form class="form-horizontal" action="/output#a1" name="inputform" method="GET">
 
             <div class="form-group">
               <label class="col-md-1 control-label" for="formGroupInputAdd">Add </label>
@@ -77,7 +77,7 @@
             <div class="form-group">
               <label class="col-md-1 control-label" for="formGroupInputSubtract">Subtract </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" id="inputSubtract" name="inputSubtract" value = "{{subtract_list}}">
+                <input type="text" class="form-control" id="inputSubtract" name="inputSubtract" value = "{{subtract_list}}" >
               </div>
             </div>
             <div class="radio col-sm-2 col-sm-offset-1">
@@ -110,7 +110,7 @@
         </ul>
       </div> <!-- container: Example Links -->
 
-    <div class="container">
+    <div class="container" id="a1">
       <div class="starter-template">
         <p class="lead">Adding: {{add_list}} </p>
         <p class="lead">Subtracting: {{subtract_list}} </p>
@@ -133,7 +133,7 @@
         <div class="row">
           {% for result in results_list[:3] %}
           
-          <div class="col-sm-4"> 
+          <div class="col-sm-4" > 
             <h2><strong>{{ result[0]}}</strong></h2> <img src= {{ result[1] }} class="img-rounded" align="left" Hspace="10"> 
             <p>{{ result[2] | safe }} </p>
           </div>
